@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const moment = require("moment");
 
 router
   .route("/")
@@ -6,9 +7,13 @@ router
     res.status(200).json({ success: true, msg: "Get all events" });
   })
   .post((req, res, next) => {
+    const options = { day: "2-digit", month: "short", year: "numeric" };
+    let { date } = req.body;
+    date = new Date(date);
+    date = moment(date).format("DD-MMM-YYYY");
     res
       .status(201)
-      .json({ success: true, msg: "Post new event", data: req.body });
+      .json({ success: true, msg: "Post new event", data: req.body, date });
   });
 
 router
