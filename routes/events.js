@@ -1,5 +1,11 @@
+const path = require("path");
 const router = require("express").Router();
 const moment = require("moment");
+const { getEvents, addEvent } = require(path.join(
+  "..",
+  "controllers",
+  "events"
+));
 
 router
   .route("/")
