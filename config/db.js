@@ -7,6 +7,7 @@ const connectDB = async () => {
       dbName: "event_logger_db",
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useCreateIndex: true,
     },
     (err) => (err ? console.log(err) : null)
   );
