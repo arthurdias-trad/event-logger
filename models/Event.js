@@ -34,6 +34,8 @@ const EventSchema = new mongoose.Schema({
 
 EventSchema.set("collection", "events");
 
+EventSchema.index({ name: 1, startDate: 1 }, { unique: true });
+
 EventSchema.pre("save", function (next) {
   if (!this.endDate) {
     this.endDate = this.startDate;

@@ -20,7 +20,7 @@ exports.getEvents = async (req, res) => {
 // @desc    Get a single event
 // @route   GET /events/:id
 // @access  Public
-exports.getEvent = async (req, res) => {
+exports.getEvent = async (req, res, next) => {
   try {
     const event = await Event.findById(req.params.id);
 
@@ -33,7 +33,8 @@ exports.getEvent = async (req, res) => {
       event,
     });
   } catch (err) {
-    return res.status(500).json({ success: false, error: err });
+    // return res.status(500).json({ success: false, error: err });
+    next(err);
   }
 };
 
@@ -84,7 +85,7 @@ exports.updateEvent = async (req, res) => {
       req.body.endDate = req.body.startDate;
     }
 
-    event = await Event.updateOne({ _id: req.params.id }, req.body, {
+    event = await Event.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
 
