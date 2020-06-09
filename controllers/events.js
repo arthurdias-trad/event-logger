@@ -68,24 +68,20 @@ exports.deleteEvent = async (req, res, next) => {
 // @desc    Update an event
 // @route   PUT /events/:id
 // @access  Public
-exports.updateEvent = async (req, res) => {
-  try {
-    let event = await Event.findById(req.params.id);
+exports.updateEvent = asyncHandler(async (req, res) => {
+  let event = await Event.findById(req.params.id);
 
-    if (!event) {
-      next(new ErrorResponse(`Event not found with ID ${req.params.id}`, 404));
-    }
-
-    if (Date(req.body.startDate) !== event.startDate && !req.body.endDate) {
-      req.body.endDate = req.body.startDate;
-    }
-
-    event = await Event.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-
-    return res.status(200).json({ success: true, event });
-  } catch (err) {
-    return res.status(500).json({ success: false, error: err });
+  if (!event) {
+    next(new ErrorResponse(`Event not found with ID ${req.params.id}`, 404));
   }
-};
+
+  if (Date(req.body.startDate) !== event.startDate && !req.body.endDate) {
+    req.body.endDate = req.body.startDate;
+  }
+
+  event = await Event.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+
+  return res.status(200).json({ success: true, event });
+});
