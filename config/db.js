@@ -11,7 +11,7 @@ const connectDB = async () => {
     },
     (err) => (err ? console.log(err) : null)
   );
-  console.log(`Connected to MongoDB: ${conn.connection.host}`);
+  console.log(`Connected to MongoDB: ${conn.connection.host}`.bgGreen.bold);
 };
 
 module.exports = connectDB;
