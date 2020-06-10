@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const colors = require("colors");
+const dotenv = require("dotenv");
 const db = require(path.join(__dirname, "config", "db"));
 const errorHandler = require(path.join(__dirname, "middleware", "error"));
 
@@ -14,11 +15,16 @@ app.use(express.json());
 // Connect to db
 db();
 
+// Set up config file
+dotenv.config({ path: path.join(__dirname, "config", "config.env") });
+
 // Get router files
 const events = require(path.join(__dirname, "routes", "events"));
+const auth = require(path.join(__dirname, "routes", "auth"));
 
 // Set up router files
 app.use("/events", events);
+app.use("/auth", auth);
 
 // Set up error handling middleware
 app.use(errorHandler);
