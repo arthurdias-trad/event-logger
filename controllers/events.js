@@ -75,7 +75,10 @@ exports.updateEvent = asyncHandler(async (req, res) => {
     next(new ErrorResponse(`Event not found with ID ${req.params.id}`, 404));
   }
 
-  if (Date(req.body.startDate) !== event.startDate && !req.body.endDate) {
+  if (
+    Date(req.body.startDate) !== event.startDate &&
+    (!req.body.endDate || req.body.endDate < req.body.startDate)
+  ) {
     req.body.endDate = req.body.startDate;
   }
 
