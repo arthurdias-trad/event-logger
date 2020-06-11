@@ -2,7 +2,7 @@ const router = require("express").Router();
 const path = require("path");
 const ErrorResponse = require(path.join("..", "utils", "ErrorResponse"));
 const { check, validationResult } = require("express-validator");
-const { register } = require(path.join("..", "controllers", "auth"));
+const { register, login } = require(path.join("..", "controllers", "auth"));
 
 router.route("/register").post([
   check("email", "Please enter a valid email address").isEmail(),
@@ -20,5 +20,7 @@ router.route("/register").post([
     register(req, res, next);
   },
 ]);
+
+router.route("/login").post(login);
 
 module.exports = router;

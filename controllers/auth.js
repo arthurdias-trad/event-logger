@@ -1,8 +1,9 @@
 const path = require("path");
-const jwt = require("jsonwebtoken");
+
 const User = require(path.join("..", "models", "User"));
 const ErrorResponse = require(path.join("..", "utils", "ErrorResponse"));
 const AsyncHandler = require(path.join("..", "middleware", "async"));
+const { tokenizer } = require(path.join("..", "utils", "TokenParser"));
 
 // @desc    Register user
 // @route   POST /auth/register
@@ -27,9 +28,35 @@ exports.register = AsyncHandler(async (req, res, next) => {
 
   const payload = { user: { id: user._id } };
 
-  const token = await jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES,
-  });
+  const token = await tokenizer(payload);
 
   return res.status(201).json({ success: true, token });
+});
+
+// @desc    Login user & return token
+// @route   POST /auth/login
+// @access  Public
+exports.login = AsyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  let user = await User.findOne({ email }).select("+password");
+
+  if (!user) {
+    return next(new ErrorResponse("Wrong credentials.", 400));
+  }
+
+  let match = await user.isMatch(password);
+
+  if (!match) {
+    return next(new ErrorResponse("Wrong credentials.", 400));
+  }
+
+  const payload = { user: { id: user._id } };
+
+  const token = await tokenizer(payload);
+
+  return res
+    .status(201)
+    .cookie("JWT", token, { httpOnly: true })
+    .json({ success: true, token });
 });

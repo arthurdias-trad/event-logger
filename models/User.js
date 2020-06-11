@@ -35,6 +35,7 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+// Encrypt password before saving user
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
@@ -44,5 +45,14 @@ UserSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
+
+// Method to match password to hash
+UserSchema.methods.isMatch = async function isMatch(password) {
+  try {
+    return await bcrypt.compare(password, this.password);
+  } catch (err) {
+    throw err;
+  }
+};
 
 module.exports = mongoose.model("User", UserSchema);
