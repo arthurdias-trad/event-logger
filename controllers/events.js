@@ -6,18 +6,14 @@ const AsyncHandler = require(path.join("..", "middleware", "async"));
 // @desc    Get all events
 // @route   GET /events
 // @access  Public
-exports.getEvents = async (req, res, next) => {
-  try {
-    const events = await Event.find();
+exports.getEvents = AsyncHandler(async (req, res, next) => {
+  const events = await Event.find();
 
-    return res.status(200).json({
-      success: true,
-      events,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+  return res.status(200).json({
+    success: true,
+    events,
+  });
+});
 
 // @desc    Get a single event
 // @route   GET /events/:id
@@ -68,7 +64,7 @@ exports.deleteEvent = async (req, res, next) => {
 // @desc    Update an event
 // @route   PUT /events/:id
 // @access  Public
-exports.updateEvent = asyncHandler(async (req, res) => {
+exports.updateEvent = AsyncHandler(async (req, res) => {
   let event = await Event.findById(req.params.id);
 
   if (!event) {
