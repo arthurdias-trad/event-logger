@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const EventSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "user",
+  },
   name: {
     type: String,
     required: [true, "Please add the event name"],
@@ -34,7 +39,7 @@ const EventSchema = new mongoose.Schema({
 
 EventSchema.set("collection", "events");
 
-EventSchema.index({ name: 1, startDate: 1 }, { unique: true });
+EventSchema.index({ name: 1, startDate: 1, user: 1 }, { unique: true });
 
 EventSchema.pre("save", function (next) {
   if (!this.endDate || this.endDate < this.startDate) {

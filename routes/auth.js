@@ -13,7 +13,7 @@ router.route("/register").post([
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       let msgs = [];
-      errors.errors.forEach((error) => msgs.push(error.msg));
+      errors.array().forEach((error) => msgs.push(error.msg));
       return next(new ErrorResponse(msgs, 404));
     }
 
