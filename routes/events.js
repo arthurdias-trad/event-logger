@@ -1,4 +1,5 @@
 const path = require("path");
+const auth = require("../middleware/auth");
 const router = require("express").Router();
 const {
   getEvents,
@@ -7,6 +8,8 @@ const {
   deleteEvent,
   updateEvent,
 } = require(path.join("..", "controllers", "events"));
+
+router.use(auth);
 
 router.route("/").get(getEvents).post(addEvent);
 
