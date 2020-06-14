@@ -60,3 +60,18 @@ exports.login = AsyncHandler(async (req, res, next) => {
     .cookie("JWT", token, { httpOnly: true })
     .json({ success: true, token });
 });
+
+// @desc    Delete user and events
+// @route   DELETE auth/
+// @access  Private
+exports.deleteUser = AsyncHandler(async (req, res, next) => {
+  let user = await User.findById(req.user);
+
+  if (!user) {
+    return next(new ErrorResponse("Wrong credentials.", 403));
+  }
+
+  user.remove();
+
+  return res.status(204).send();
+});

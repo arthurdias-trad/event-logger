@@ -46,6 +46,11 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
+// Cascade delete events
+UserSchema.post("remove", async function (next) {
+  await this.model("Event").deleteMany({ user: this._id });
+});
+
 // Method to match password to hash
 UserSchema.methods.isMatch = async function isMatch(password) {
   try {
