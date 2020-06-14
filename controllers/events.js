@@ -7,7 +7,7 @@ const AsyncHandler = require(path.join("..", "middleware", "async"));
 // @route   GET /events
 // @access  Public
 exports.getEvents = AsyncHandler(async (req, res, next) => {
-  const events = await Event.find();
+  const events = await Event.find({ user: req.user });
 
   return res.status(200).json({
     success: true,
@@ -19,7 +19,7 @@ exports.getEvents = AsyncHandler(async (req, res, next) => {
 // @route   GET /events/:id
 // @access  Public
 exports.getEvent = AsyncHandler(async (req, res, next) => {
-  const event = await Event.findById(req.params.id);
+  const event = await Event.findOne({ _id: req.params.id, user: req.user });
 
   if (!event) {
     return next(
@@ -38,7 +38,7 @@ exports.getEvent = AsyncHandler(async (req, res, next) => {
 // @access  Public
 exports.addEvent = AsyncHandler(async (req, res, next) => {
   req.body.user = req.user;
-  console.log(req.user);
+
   const event = new Event(req.body);
   await event.save();
 
