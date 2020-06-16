@@ -2,7 +2,8 @@ const router = require("express").Router();
 const path = require("path");
 const ErrorResponse = require(path.join("..", "utils", "ErrorResponse"));
 const { check, validationResult } = require("express-validator");
-const { register, login } = require(path.join("..", "controllers", "auth"));
+const { register, deleteUser, login } = require("../controllers/auth");
+const auth = require("../middleware/auth");
 
 router.route("/register").post([
   check("email", "Please enter a valid email address").isEmail(),
@@ -22,5 +23,9 @@ router.route("/register").post([
 ]);
 
 router.route("/login").post(login);
+
+router.delete("/", auth, async (req, res, next) => {
+  deleteUser(req, res, next);
+});
 
 module.exports = router;
