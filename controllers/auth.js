@@ -68,7 +68,7 @@ exports.deleteUser = AsyncHandler(async (req, res, next) => {
   let user = await User.findById(req.user);
 
   if (!user) {
-    return next(new ErrorResponse("Wrong credentials.", 403));
+    return next(new ErrorResponse("Not authorized to delete this user.", 401));
   }
 
   user.remove();
